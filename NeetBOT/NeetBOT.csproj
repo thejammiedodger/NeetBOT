@@ -90,7 +90,6 @@
     <Compile Include="NB_Classes\CommandMethods.cs" />
     <Compile Include="NB_Classes\InputParser.cs" />
     <Compile Include="NB_Classes\JSON.cs" />
-    <Compile Include="NB_Classes\PingSender.cs" />
     <Compile Include="NB_Classes\SendMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

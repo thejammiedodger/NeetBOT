@@ -11,7 +11,7 @@ namespace NeetBOT.NB_Classes
         
         public static void Parse(string input)
         {
-            if (input.Contains(":~NB"))
+            if (input.Contains(":!NB"))
             {
                 ParseCommands(input);
             }
@@ -23,14 +23,20 @@ namespace NeetBOT.NB_Classes
 
         public static void ParseCommands(string input)
         {
-            string message = input.Substring(input.IndexOf("~NB"));
+            if (input.Contains("PING"))
+            {
+                ircWriteLine(input.Replace("PING", "PONG"));
+            }
+
+            string message = input.Substring(input.IndexOf("!NB"));
+            string userRequested = input.Substring(input.IndexOf(":") + 1, input.IndexOf("!") - 1);
             if (StringContains(message, "maths") || StringContains(message, "math"))
             {
                 ircWriteLine(CommandMethods.Maths(message));
             }
             else if (StringContains(message, "help"))
             {
-                ircWriteMultiLine(CommandMethods.Help());
+                ircWriteMultiLine(CommandMethods.Help(userRequested));
             }
             else if (StringContains(message, "insult"))
             {
@@ -38,7 +44,15 @@ namespace NeetBOT.NB_Classes
             }
             else if (StringContains(message, "challenge"))
             {
-                ircWriteLine(CommandMethods.Challenge());
+                 ircWriteLine(CommandMethods.Challenge(userRequested, input));
+            }
+            else if (StringContains(message, "imply"))
+            {
+                ircWriteLine(SendMethods.PrivateMessage("\u0003" + "03>Implying"));
+            }
+            else if (StringContains(message, "contribute"))
+            {
+                ircWriteLine(SendMethods.UserPrivateMessage("https://github.com/sirdoombox/NeetBOT", userRequested));
             }
             else
             {
@@ -47,13 +61,11 @@ namespace NeetBOT.NB_Classes
         }
 
         public static void ParseCTCP(string input)
-        {
-            int start = input.IndexOf(":") + 1;
-            int length = input.IndexOf("!") - 1;
-            string replyTo = input.Substring(start, length);
-            if(input.Contains("VERSION"))
+        {           
+            string userRequested = input.Substring(input.IndexOf(":") + 1, input.IndexOf("!") - 1);
+            if (input.Contains("VERSION"))
             {
-                ircWriteLine(SendMethods.ctcpVersionResponse(replyTo));
+                ircWriteLine(SendMethods.ctcpVersionResponse(userRequested));
             }
         }
 

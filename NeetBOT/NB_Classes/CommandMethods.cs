@@ -9,15 +9,24 @@ namespace NeetBOT.NB_Classes
     {
         public static Random rand = new Random();
 
-        public static List<string> Help()
+        public static List<string> Help(string user)
         {
             List<string> helpLines = new List<string>()
             {
-                SendMethods.PrivateMessage("-=-------=- [ NeetBOT Help ] -=-------=-"),
-                SendMethods.PrivateMessage("~NB Math/Maths[calculation] - eg. Math[1337*420]"),
-                SendMethods.PrivateMessage("~NB insult - Insult a random shit language")
+                "-=-------=- [ NeetBOT Help ] -=-------=-",
+                "!NB Math/Maths[calculation] - eg. Math[1337*420]",
+                "!NB insult - Insult a random shit language",
+                "!NB challenge - Sends you a random challenge.",
+                "----[count] - Sends the total number of challenges available.",
+                "!NB contribute - NeetBOT's github page."
             };
-            return helpLines;
+
+            List<string> tempHelp = new List<string>();
+            foreach(var helpLine in helpLines)
+            {
+                tempHelp.Add(SendMethods.UserNotice(helpLine, user));
+            }
+            return tempHelp;
         }
 
         public static string Maths(string message)
@@ -52,13 +61,18 @@ namespace NeetBOT.NB_Classes
         }
 
         public static List<string> ChallengeList;
-        public static string Challenge()
-        {          
-            return (SendMethods.PrivateMessage("Your challenge - " + ChallengeList[rand.Next(0, ChallengeList.Count)] + " - Better get started."));
-        }
-        public static string ChallengeCount()
-        {
-            return (SendMethods.PrivateMessage("Number of Challenges -" + ChallengeList.Count));
+        public static string Challenge(string user, string input)
+        {                       
+            if (input.Contains("[") && input.Contains("]"))
+            {
+                string args = input.Split('[', ']')[1];
+                return (SendMethods.PrivateMessage("Number of Challenges - " + ChallengeList.Count));
+            }
+            else
+            {
+                return (SendMethods.UserNotice("Your challenge - " + ChallengeList[rand.Next(0, ChallengeList.Count)] + " - Better get started.", user));
+            }
+                                
         }
     }
 }

@@ -49,7 +49,6 @@ namespace NeetBOT
         public TcpClient irc;
         public StreamReader reader;
         public static StreamWriter writer;
-        PingSender ping;
         public async void IRC_Connect(string server, int port, string channel, string user, string nick)
         {
             NetworkStream stream;
@@ -60,12 +59,9 @@ namespace NeetBOT
                 {
                     irc = new TcpClient(server, port);
                     stream = irc.GetStream();
-                    await Task.Delay(5000);
+                    await Task.Delay(1000);
                     reader = new StreamReader(stream);
-                    writer = new StreamWriter(stream);
-                    // Start PingSender thread
-                    ping = new PingSender();
-                    ping.Start();                   
+                    writer = new StreamWriter(stream);              
                     writer.WriteLine(user);
                     writer.Flush();
                     writer.WriteLine("NICK " + nick);
@@ -99,7 +95,6 @@ namespace NeetBOT
 
         protected override void OnClosed(EventArgs e)
         {          
-            ping.Stop();
             reader.Close();
             irc.Close();
             writer.Close();

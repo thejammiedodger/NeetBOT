@@ -18,6 +18,11 @@ namespace NeetBOT.NB_Classes
             return "PRIVMSG " + user + " :" + message;
         }
 
+        public static string UserNotice(string message, string user)
+        {
+            return "NOTICE " + user + " :" + message;
+        }
+
         public static string ctcpVersionResponse(string user)
         {           
             return "NOTICE " + user + " :" + "\u0001" + "VERSION " + MainWindow.VERSION + "\u0001";
