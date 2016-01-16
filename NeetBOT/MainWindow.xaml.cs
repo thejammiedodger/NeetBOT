@@ -38,6 +38,7 @@ namespace NeetBOT
 
             LoadLocal();
 
+            // Testing values //
             txtChannel.Text = "DPT";
             txtPort.Text = "6667";
             txtServer.Text = "irc.rizon.net";
@@ -154,7 +155,6 @@ namespace NeetBOT
         #endregion
         
         #region Misc code
-
         private void ircConnected()
         {
             ConnectContainer.Visibility = Visibility.Collapsed;

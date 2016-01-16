@@ -4,6 +4,7 @@ using NCalc;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace NeetBOT.NB_Classes
 {
@@ -71,38 +72,39 @@ namespace NeetBOT.NB_Classes
                 {
                     if(InputParser.StringContains(tempParams[1], "language"))
                     {
-                        try
+                        if (insultData.Languages.Any(x => x.Contains(tempParams[2])))
                         {
                             insultData.Languages.Add(tempParams[2]);
                             return (SendMethods.PrivateMessage("Language \"" + tempParams[2] + "\" added."));
                         }
-                        catch
+                        else
                         {
-                            return (SendMethods.PrivateMessage("Invalid Language - Check input"));
+                            return (SendMethods.PrivateMessage("Language \"" + tempParams[2] + "\" already exists."));
                         }
                     }
                     if (InputParser.StringContains(tempParams[1], "adjective"))
                     {
-                        try
+                        if(insultData.Adjectives.Any(x => x.Contains(tempParams[2])))
                         {
                             insultData.Adjectives.Add(tempParams[2]);
                             return (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" added."));
                         }
-                        catch
+                        else
                         {
-                            return (SendMethods.PrivateMessage("Invalid Adjective - Check input"));
+                            return (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" already exists."));
                         }
+
                     }
                     if (InputParser.StringContains(tempParams[1], "insult"))
                     {
-                        try
+                        if (insultData.Adjectives.Any(x => x.Contains(tempParams[2])))
                         {
                             insultData.Insults.Add(tempParams[2]);
                             return (SendMethods.PrivateMessage("Insult \"" + tempParams[2] + "\" added."));
                         }
-                        catch
+                        else
                         {
-                            return (SendMethods.PrivateMessage("Invalid Insult - Check input"));
+                            return (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" already exists."));
                         }
                     }
                     else
