@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,9 +25,9 @@ namespace NeetBOT.NB_Classes
             }
         }
        
-        public static List<string> Deserialise(string resource)
+        public static ObservableCollection<string> Deserialise(string resource)
         {
-            List<string> tempList = new List<string>();
+            ObservableCollection<string> tempList = new ObservableCollection<string>();
             Console.WriteLine(resource);
             var assembly = Assembly.GetExecutingAssembly();
 
@@ -35,7 +36,7 @@ namespace NeetBOT.NB_Classes
             using (StreamReader sr = new StreamReader(stream))
             using (JsonTextReader jr = new JsonTextReader(sr))
             {
-                tempList = serializer.Deserialize<List<string>>(jr);
+                tempList = serializer.Deserialize<ObservableCollection<string>>(jr);
             }
             return tempList;
         }

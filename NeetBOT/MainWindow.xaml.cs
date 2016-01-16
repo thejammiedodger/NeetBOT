@@ -8,6 +8,8 @@ using System.Threading;
 using System.Globalization;
 using System.Collections.Generic;
 using NeetBOT.Properties;
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace NeetBOT
 {
@@ -31,7 +33,10 @@ namespace NeetBOT
         public MainWindow()
         {
             InitializeComponent();
-            CommandMethods.ChallengeList = JSON.Deserialise(LocalResources.challenges);
+
+            CommandMethods.ChallengeList = JSON.Deserialise(LocalResources.challenges); lstChallenges.ItemsSource = CommandMethods.ChallengeList;
+            BindingOperations.EnableCollectionSynchronization(lstChallenges.ItemsSource, CommandMethods.ChallengeList);
+
             txtChannel.Text = "DPT";
             txtPort.Text = "6667";
             txtServer.Text = "irc.rizon.net";
@@ -39,6 +44,7 @@ namespace NeetBOT
             startTime = DateTime.UtcNow;
         }
 
+        #region Connection Controls
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
             ConnectContainer.Visibility = Visibility.Collapsed;
@@ -48,7 +54,9 @@ namespace NeetBOT
             CHANNEL = "#" + txtChannel.Text;
             IRC_Connect(SERVER, PORT, CHANNEL, USER, NICK);
         }
+        #endregion
 
+        #region IRC Connection
         public TcpClient irc;
         public StreamReader reader;
         public static StreamWriter writer;
@@ -101,7 +109,9 @@ namespace NeetBOT
                 IRC_Connect(server, port, channel, user, nick);
             }
         }
+        #endregion
 
+        #region Misc code
         protected override void OnClosed(EventArgs e)
         {          
             reader.Close();
@@ -109,6 +119,18 @@ namespace NeetBOT
             writer.Close();
             base.OnClosed(e);           
             Application.Current.Shutdown();
+        }
+        #endregion
+
+        private void lstChallenges_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(lstChallenges.SelectedIndex != -1)
+            {
+                if(e.Key == Key.Delete)
+                {
+                    CommandMethods.ChallengeList.RemoveAt(lstChallenges.SelectedIndex);
+                }
+            }
         }
     }
 }

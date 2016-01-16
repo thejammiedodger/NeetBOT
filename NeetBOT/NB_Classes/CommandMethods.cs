@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NCalc;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
 
 namespace NeetBOT.NB_Classes
 {
@@ -21,6 +22,7 @@ namespace NeetBOT.NB_Classes
                 "!NB insult - Insult a random shit language",
                 "!NB challenge - Sends you a random challenge.",
                 "----[count] - Sends the total number of challenges available.",
+                "----[Add | string] - Adds a new challenge to the list",
                 "!NB contribute - NeetBOT's github page."
             };
 
@@ -63,13 +65,27 @@ namespace NeetBOT.NB_Classes
             return (SendMethods.PrivateMessage(langs[rand.Next(0, langs.Count)] + " is a " + negAdj[rand.Next(0, negAdj.Count)] + " language for " + negIns[rand.Next(0, negIns.Count)]));
         }
 
-        public static List<string> ChallengeList;
+        public static ObservableCollection<string> ChallengeList;
         public static string Challenge(string user, string input)
         {                       
             if (input.Contains("[") && input.Contains("]"))
             {
-                string args = input.Split('[', ']')[1];
-                return (SendMethods.PrivateMessage("Number of Challenges - " + ChallengeList.Count));
+                List<string> tempParams = InputParser.ParseParams(input);
+
+                if(InputParser.StringContains(tempParams[0],"count"))
+                {
+                    return (SendMethods.PrivateMessage("Number of Challenges - " + ChallengeList.Count));
+                }
+                else if(InputParser.StringContains(tempParams[0], "add") && tempParams.Count == 2)
+                {
+                    try { ChallengeList.Add(tempParams[1]); return SendMethods.PrivateMessage("Challenge \"" + tempParams[1] + "\" Added."); }
+                    catch { return SendMethods.PrivateMessage("Invalid challenge - !NB Help"); }
+                }
+                else
+                {
+                    return (SendMethods.PrivateMessage("Invalid Challenge Parameter - !NB Help"));
+                }
+                
             }
             else
             {

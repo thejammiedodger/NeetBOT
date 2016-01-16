@@ -85,8 +85,8 @@ namespace NeetBOT.NB_Classes
             string args = message.Split('[', ']')[1];
             string[] tempStrings = args.Split('|');
             foreach(string param in tempStrings)
-            {
-                tempParams.Add(param);
+            {               
+                tempParams.Add(param.Trim(' '));
             }
             return tempParams;
         }

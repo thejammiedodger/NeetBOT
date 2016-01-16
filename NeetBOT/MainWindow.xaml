@@ -32,7 +32,9 @@
                     Width="500"
                     Margin="10"
                     Visibility="Collapsed">
-            
+            <ListBox x:Name="lstChallenges"
+                     Height="200"
+                     KeyDown="lstChallenges_KeyDown"/>
         </StackPanel>
     </Grid>
 </Controls:MetroWindow>
