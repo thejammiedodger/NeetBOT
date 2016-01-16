@@ -11,14 +11,14 @@ namespace NeetBOT.NB_Classes
     {
         public static Random rand = new Random();
 
+        #region Help Command
         public static List<string> Help(string user)
         {
             List<string> helpLines = new List<string>()
             {
                 "-=-------=- [ NeetBOT Help ] -=-------=-",
                 "!NB Math/Maths[calculation] - eg. Math[1337*420]",
-                "!NB rotEncrypt[int | string] - eg. rot[13, /dpt/ is shit]",
-                "!NB rotdecrypt[int | string]",
+                "!NB rotEncrypt[encrypt / decrypt | int | string] - eg. rot[encrypt | 13 | /dpt/ is shit]",
                 "!NB insult - Insult a random shit language",
                 "!NB challenge - Sends you a random challenge.",
                 "----[count] - Sends the total number of challenges available.",
@@ -33,12 +33,14 @@ namespace NeetBOT.NB_Classes
             }
             return tempHelp;
         }
+        #endregion
 
-        public static string Maths(string message)
+        #region Maths command
+        public static string Maths(string input)
         {
-            if (message.Contains("[") && message.Contains("]"))
+            if (input.Contains("[") && input.Contains("]"))
             {
-                string calcString = message.Split('[', ']')[1];
+                string calcString = input.Split('[', ']')[1];
                 try
                 {
                     Expression e = new Expression(calcString);
@@ -47,24 +49,83 @@ namespace NeetBOT.NB_Classes
                 }
                 catch
                 {
-                    return SendMethods.PrivateMessage("Inavlid Parameter - Check your sum");
+                    return SendMethods.PrivateMessage("Inavlid Parameter - Check your calculation");
                 }                   
             }
 
             else
             {
-                return SendMethods.PrivateMessage("No Paramaters - Put your sum in '[ ]'");
+                return SendMethods.PrivateMessage("Invalid Parameter - See !NB help");
             }
         }
+        #endregion
 
-        public static string Insult()
-        {            
-            List<string> langs = new List<string>() { "Haskell", "Ruby", "Java", "C", "Rust", "C#", "D", "PHP", "JavaScript", "Lua", "Python", "Common Lisp", "Perl" };
-            List<string> negAdj = new List<string>() { "shit", "terrible", "worthless", "idiotic", "bloated", "horseshit", "utter wank", "awful", "great", "perfect" };
-            List<string> negIns = new List<string>() { "cunts", "arsebandits", "morons", "nitwits", "babby-tier programmers", "dickheads" };
-            return (SendMethods.PrivateMessage(langs[rand.Next(0, langs.Count)] + " is a " + negAdj[rand.Next(0, negAdj.Count)] + " language for " + negIns[rand.Next(0, negIns.Count)]));
+        #region Insult Command
+        public static InsultData insultData;
+        public static string Insult(string input)
+        {
+            if (input.Contains("[") && input.Contains("]"))
+            {
+                List<string> tempParams = InputParser.ParseParams(input);
+                if (InputParser.StringContains(tempParams[0], "add"))
+                {
+                    if(InputParser.StringContains(tempParams[1], "language"))
+                    {
+                        try
+                        {
+                            insultData.Languages.Add(tempParams[2]);
+                            return (SendMethods.PrivateMessage("Language \"" + tempParams[2] + "\" added."));
+                        }
+                        catch
+                        {
+                            return (SendMethods.PrivateMessage("Invalid Language - Check input"));
+                        }
+                    }
+                    if (InputParser.StringContains(tempParams[1], "adjective"))
+                    {
+                        try
+                        {
+                            insultData.Adjectives.Add(tempParams[2]);
+                            return (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" added."));
+                        }
+                        catch
+                        {
+                            return (SendMethods.PrivateMessage("Invalid Adjective - Check input"));
+                        }
+                    }
+                    if (InputParser.StringContains(tempParams[1], "insult"))
+                    {
+                        try
+                        {
+                            insultData.Insults.Add(tempParams[2]);
+                            return (SendMethods.PrivateMessage("Insult \"" + tempParams[2] + "\" added."));
+                        }
+                        catch
+                        {
+                            return (SendMethods.PrivateMessage("Invalid Insult - Check input"));
+                        }
+                    }
+                    else
+                    {
+                        return (SendMethods.PrivateMessage("Invalid parameter - See !NB help"));
+                    }
+                }
+                else
+                {
+                    return (SendMethods.PrivateMessage("Invalid parameter - See !NB help"));
+                }
+            }
+            else
+            {
+                string Lang = insultData.Languages[rand.Next(0, insultData.Languages.Count)];
+                string Adj = insultData.Adjectives[rand.Next(0, insultData.Adjectives.Count)];
+                string Ins = insultData.Insults[rand.Next(0, insultData.Insults.Count)];
+                return (SendMethods.PrivateMessage(Lang + " is a " + Adj + " language for " + Ins));
+            }        
         }
+        #endregion
 
+        #region Challlenge Command
         public static ObservableCollection<string> ChallengeList;
         public static string Challenge(string user, string input)
         {                       
@@ -79,11 +140,11 @@ namespace NeetBOT.NB_Classes
                 else if(InputParser.StringContains(tempParams[0], "add") && tempParams.Count == 2)
                 {
                     try { ChallengeList.Add(tempParams[1]); return SendMethods.PrivateMessage("Challenge \"" + tempParams[1] + "\" Added."); }
-                    catch { return SendMethods.PrivateMessage("Invalid challenge - !NB Help"); }
+                    catch { return SendMethods.PrivateMessage("Invalid challenge - See !NB Help"); }
                 }
                 else
                 {
-                    return (SendMethods.PrivateMessage("Invalid Challenge Parameter - !NB Help"));
+                    return (SendMethods.PrivateMessage("Invalid Challenge Parameter - See !NB Help"));
                 }
                 
             }
@@ -92,123 +153,106 @@ namespace NeetBOT.NB_Classes
                 return (SendMethods.UserNotice("Your challenge - " + ChallengeList[rand.Next(0, ChallengeList.Count)] + " - Better get started.", user));
             }                                
         }
+        #endregion
 
+        #region Uptime Command
         public static string Uptime()
         {
             TimeSpan duration = DateTime.Now - MainWindow.startTime;
-            return (SendMethods.PrivateMessage("Current uptime - " + duration.ToString()));
+            return (SendMethods.PrivateMessage(string.Format("Current uptime - {0:%d} Days {0:%h} Hours {0:%m} Minutes and {0:%s} Seconds.", duration)));
         }
+        #endregion
 
+        #region Rot Encryption Command
         public static string RotEncrypt(string input)
         {
             if (input.Contains("[") && input.Contains("]"))
             {
                 List<string> tempParams = InputParser.ParseParams(input);
-                try
+                if (InputParser.StringContains(tempParams[0], "encrypt"))
                 {
-                    int rotVal = Int32.Parse(tempParams[0]);
-                    string message = tempParams[1];
-                    if (rotVal <= 25)
+                    try
                     {
-                        char[] array = message.ToCharArray();
-                        for (int i = 0; i < array.Length; i++)
+                        int rotVal = Int32.Parse(tempParams[1]);
+                        string message = tempParams[2];
+                        if (rotVal <= 25)
                         {
-                            int number = (int)array[i];
-
-                            if (number >= 'a' && number <= 'z')
+                            char[] inArray = message.ToCharArray();
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 0; i < inArray.Length; i++)
                             {
-                                if (number > 'm')
+                                int c = inArray[i];
+                                if (c >= 'a' && c <= 'z')
                                 {
-                                    number -= rotVal;
+                                    c = (c - 'a' + 26 + rotVal) % 26 + 'a';
                                 }
-                                else
+                                else if (c >= 'A' && c <= 'Z')
                                 {
-                                    number += rotVal;
+                                    c = (c - 'A' + 26 + rotVal) % 26 + 'A';
                                 }
+                                else { }
+                                inArray[i] = (char)c;
+                                sb.Append(inArray[i].ToString());
                             }
-                            else if (number >= 'A' && number <= 'Z')
-                            {
-                                if (number > 'M')
-                                {
-                                    number -= rotVal;
-                                }
-                                else
-                                {
-                                    number += rotVal;
-                                }
-                            }
-                            array[i] = (char)number;
+                            return (SendMethods.PrivateMessage("Rot" + rotVal + " Output: " + sb.ToString()));
                         }
-                        return (SendMethods.PrivateMessage("Rot" + rotVal + " Output: " + new string (array)));
+                        else
+                        {
+                            return (SendMethods.PrivateMessage("Rotation value too high - Max: 25"));
+                        }
                     }
-                    else
+                    catch
                     {
-                        return (SendMethods.PrivateMessage("Rotation value too high - Max: 25"));
+                        return (SendMethods.PrivateMessage("Invalid Parameter - See !NB Help"));
                     }
-
                 }
-                catch
+                else if (InputParser.StringContains(tempParams[0], "decrypt"))
                 {
-                    return (SendMethods.PrivateMessage("Invalid Command - Please refer to '!NB Help'"));
-                }                
+                    try
+                    {
+                        int rotVal = Int32.Parse(tempParams[1]);
+                        string message = tempParams[2];
+                        if (rotVal <= 25)
+                        {
+                            char[] inArray = message.ToCharArray();
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 0; i < inArray.Length; i++)
+                            {
+                                int c = inArray[i];
+                                if (c >= 'a' && c <= 'z')
+                                {
+                                    c = (c - 'a' + 26 - rotVal) % 26 + 'a';
+                                }
+                                else if (c >= 'A' && c <= 'Z')
+                                {
+                                    c = (c - 'A' + 26 - rotVal) % 26 + 'A';
+                                }
+                                else { }
+                                inArray[i] = (char)c;
+                                sb.Append(inArray[i].ToString());
+                            }
+                            return (SendMethods.PrivateMessage("Rot" + rotVal + " Output: " + sb.ToString()));
+                        }
+                        else
+                        {
+                            return (SendMethods.PrivateMessage("Rotation value too high - Max: 25"));
+                        }
+                    }
+                    catch
+                    {
+                        return (SendMethods.PrivateMessage("Invalid Parameter - See !NB Help"));
+                    }
+                }
+                else
+                {
+                    return (SendMethods.PrivateMessage("Invalid Parameter - See !NB Help"));
+                }
             }
-            return (SendMethods.PrivateMessage("Invalid Command - Please refer to '!NB Help'"));
-        }
-
-        public static string RotDecrypt(string input)
-        {
-            if (input.Contains("[") && input.Contains("]"))
+            else
             {
-                List<string> tempParams = InputParser.ParseParams(input);
-                try
-                {
-                    int rotVal = Int32.Parse(tempParams[0]);
-                    string message = tempParams[1];
-                    if (rotVal <= 25)
-                    {
-                        char[] array = message.ToCharArray();
-                        for (int i = 0; i < array.Length; i++)
-                        {
-                            int number = (int)array[i];
-
-                            if (number >= 'a' && number <= 'z')
-                            {
-                                if (number > 'm')
-                                {
-                                    number += rotVal;
-                                }
-                                else
-                                {
-                                    number -= rotVal;
-                                }
-                            }
-                            else if (number >= 'A' && number <= 'Z')
-                            {
-                                if (number > 'M')
-                                {
-                                    number += rotVal;
-                                }
-                                else
-                                {
-                                    number -= rotVal;
-                                }
-                            }
-                            array[i] = (char)number;
-                        }
-                        return (SendMethods.PrivateMessage("Rot" + rotVal + " Output: " + new string(array)));
-                    }
-                    else
-                    {
-                        return (SendMethods.PrivateMessage("Rotation value too high - Max: 25"));
-                    }
-
-                }
-                catch
-                {
-                    return (SendMethods.PrivateMessage("Invalid Command - Please refer to '!NB Help'"));
-                }
-            }
-            return (SendMethods.PrivateMessage("Invalid Command - Please refer to '!NB Help'"));
+                return (SendMethods.PrivateMessage("Invalid Parameter - See !NB Help"));
+            }         
         }
+        #endregion
     }
 }

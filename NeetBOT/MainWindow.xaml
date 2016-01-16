@@ -6,7 +6,21 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:NeetBOT"
         mc:Ignorable="d"
-        Title="NeetBOT - Connect" TitleCaps="False" d:DesignHeight="350" d:DesignWidth="525" SizeToContent="WidthAndHeight">
+        Title="NeetBOT - Connect" TitleCaps="False" d:DesignHeight="350" d:DesignWidth="525" SizeToContent="WidthAndHeight" Closing="MetroWindow_Closing" ResizeMode="NoResize">
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button x:Name="btnExit"
+                    Content="Exit"
+                    ToolTip="Disconnect from active server and exit the application"
+                    Visibility="Hidden"
+                    Click="btnExit_Click"/>
+            <Button x:Name="btnDisconnect"
+                    Content="Disconnect"
+                    ToolTip="Disconnect from active server"
+                    Visibility="Hidden"
+                    Click="btnDisconnect_Click"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
     <Grid>
         <StackPanel x:Name="ConnectContainer"
                     HorizontalAlignment="Center"
@@ -26,15 +40,50 @@
                     Content="Connect"
                     Click="btnConnect_Click"/>
         </StackPanel>
-        <StackPanel x:Name="MainContainer"
+        <Grid x:Name="MainContainer"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Width="500"
                     Margin="10"
                     Visibility="Collapsed">
-            <ListBox x:Name="lstChallenges"
-                     Height="200"
-                     KeyDown="lstChallenges_KeyDown"/>
-        </StackPanel>
+            <Controls:MetroAnimatedTabControl>
+                <Controls:MetroTabItem Header="Main">
+                    <StackPanel>
+                        
+                    </StackPanel>
+                </Controls:MetroTabItem>
+                <Controls:MetroTabItem Header="Challenges">
+                    <ListBox x:Name="lstChallenges"
+                             Height="200"
+                             KeyDown="lstChallenges_KeyDown"/>
+                </Controls:MetroTabItem>
+                <Controls:MetroTabItem Header="Insult">
+                    <StackPanel>
+                        <Label Content="Languages"
+                               HorizontalAlignment="Center"
+                               HorizontalContentAlignment="Center"/>
+                        <ListBox x:Name="lstLanguages"
+                                 Height="200"
+                                 KeyDown="lstLanguages_KeyDown"
+                                 Margin="0,0,0,10"/>
+                        
+                        <Label Content="Adjectives"
+                               HorizontalAlignment="Center"
+                               HorizontalContentAlignment="Center"/>
+                        <ListBox x:Name="lstAdj"
+                                 Height="200"
+                                 KeyDown="lstAdj_KeyDown"
+                                 Margin="0,0,0,10"/>
+                        
+                        <Label Content="Insults"
+                               HorizontalAlignment="Center"
+                               HorizontalContentAlignment="Center"/>
+                        <ListBox x:Name="lstIns"
+                                 Height="200"
+                                 KeyDown="lstIns_KeyDown"/>
+                    </StackPanel>
+                </Controls:MetroTabItem>
+            </Controls:MetroAnimatedTabControl>
+        </Grid>
     </Grid>
 </Controls:MetroWindow>

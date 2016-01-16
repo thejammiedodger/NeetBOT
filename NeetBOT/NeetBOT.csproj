@@ -37,6 +37,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChatSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChatSharp.1.0.1\lib\net451\ChatSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.2.2.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.2.2.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
@@ -88,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NB_Classes\CommandMethods.cs" />
+    <Compile Include="NB_Classes\DataObjects.cs" />
     <Compile Include="NB_Classes\InputParser.cs" />
     <Compile Include="NB_Classes\JSON.cs" />
     <Compile Include="NB_Classes\SendMethods.cs" />
@@ -114,6 +119,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <EmbeddedResource Include="Resources\InsultData" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

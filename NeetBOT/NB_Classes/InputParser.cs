@@ -23,8 +23,6 @@ namespace NeetBOT.NB_Classes
 
         public static void ParseCommands(string input)
         {
-
-
             string message = input.Substring(input.IndexOf("!NB"));
             string userRequested = input.Substring(input.IndexOf(":") + 1, input.IndexOf("!") - 1);
 
@@ -38,29 +36,25 @@ namespace NeetBOT.NB_Classes
             }
             else if (StringContains(message, "insult"))
             {
-                ircWriteLine(CommandMethods.Insult());
+                ircWriteLine(CommandMethods.Insult(input));
             }
             else if (StringContains(message, "challenge"))
             {
                 ircWriteLine(CommandMethods.Challenge(userRequested, input));
             }
-            else if (StringContains(message, "imply"))
+            else if (StringContains(message, ">"))
             {
-                ircWriteLine(SendMethods.PrivateMessage("\u0003" + "03>Implying"));
+                ircWriteLine(SendMethods.PrivateMessage("\u0003" + "03>" + message.Substring(message.IndexOf(">")+1)));
             }
             else if (StringContains(message, "contribute"))
             {
-                ircWriteLine(SendMethods.UserPrivateMessage("https://github.com/sirdoombox/NeetBOT", userRequested));
+                ircWriteLine(SendMethods.UserNotice("https://github.com/sirdoombox/NeetBOT", userRequested));
             }
             else if (StringContains(message, "uptime"))
             {
                 ircWriteLine(CommandMethods.Uptime());
             }
-            else if (StringContains(message, "rotencrypt"))
-            {
-                ircWriteLine(CommandMethods.RotEncrypt(message));
-            }
-            else if (StringContains(message, "rotdecrypt"))
+            else if (StringContains(message, "rot"))
             {
                 ircWriteLine(CommandMethods.RotEncrypt(message));
             }
@@ -98,13 +92,13 @@ namespace NeetBOT.NB_Classes
 
         public static void ircWriteLine(string output)
         {
-            MainWindow.writer.WriteLine(output);         
+            MainWindow._irc.SendRawMessage(output);         
         }
         public static void ircWriteMultiLine(List<string> output)
         {
             foreach(string line in output)
             {
-                MainWindow.writer.WriteLine(line);
+                MainWindow._irc.SendRawMessage(line);
             }
         }
     }

@@ -68,5 +68,15 @@ namespace NeetBOT.Properties {
                 return ResourceManager.GetString("challenges", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] InsultData {
+            get {
+                object obj = ResourceManager.GetObject("InsultData", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
