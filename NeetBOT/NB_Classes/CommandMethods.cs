@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NCalc;
 using System.Text;
@@ -51,7 +51,7 @@ namespace NeetBOT.NB_Classes
                 catch
                 {
                     return SendMethods.PrivateMessage("Inavlid Parameter - Check your calculation");
-                }                   
+                }
             }
 
             else
@@ -63,74 +63,78 @@ namespace NeetBOT.NB_Classes
 
         #region Insult Command
         public static InsultData insultData;
+
+
         public static string Insult(string input)
         {
-            if (input.Contains("[") && input.Contains("]"))
-            {
-                List<string> tempParams = InputParser.ParseParams(input);
-                if (InputParser.StringContains(tempParams[0], "add"))
-                {
-                    if(InputParser.StringContains(tempParams[1], "language"))
-                    {
-                        if (insultData.Languages.Any(x => x.Contains(tempParams[2])))
-                        {
-                            insultData.Languages.Add(tempParams[2]);
-                            return (SendMethods.PrivateMessage("Language \"" + tempParams[2] + "\" added."));
-                        }
-                        else
-                        {
-                            return (SendMethods.PrivateMessage("Language \"" + tempParams[2] + "\" already exists."));
-                        }
-                    }
-                    if (InputParser.StringContains(tempParams[1], "adjective"))
-                    {
-                        if(insultData.Adjectives.Any(x => x.Contains(tempParams[2])))
-                        {
-                            insultData.Adjectives.Add(tempParams[2]);
-                            return (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" added."));
-                        }
-                        else
-                        {
-                            return (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" already exists."));
-                        }
-
-                    }
-                    if (InputParser.StringContains(tempParams[1], "insult"))
-                    {
-                        if (insultData.Adjectives.Any(x => x.Contains(tempParams[2])))
-                        {
-                            insultData.Insults.Add(tempParams[2]);
-                            return (SendMethods.PrivateMessage("Insult \"" + tempParams[2] + "\" added."));
-                        }
-                        else
-                        {
-                            return (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" already exists."));
-                        }
-                    }
-                    else
-                    {
-                        return (SendMethods.PrivateMessage("Invalid parameter - See !NB help"));
-                    }
-                }
-                else
-                {
-                    return (SendMethods.PrivateMessage("Invalid parameter - See !NB help"));
-                }
-            }
-            else
+            string ret = "";
+            if (!(input.Contains("[") && input.Contains("]")))
             {
                 string Lang = insultData.Languages[rand.Next(0, insultData.Languages.Count)];
                 string Adj = insultData.Adjectives[rand.Next(0, insultData.Adjectives.Count)];
                 string Ins = insultData.Insults[rand.Next(0, insultData.Insults.Count)];
+
                 return (SendMethods.PrivateMessage(Lang + " is a " + Adj + " language for " + Ins));
-            }        
+
+            }
+
+            if(!InputParser.StringContains(tempParams[0], "add"))
+            {
+                return (SendMethods.PrivateMessage("Invalid parameter - See !NB help"));
+
+            }
+
+            List<string> tempParams = InputParser.ParseParams(input);
+
+
+            if(InputParser.StringContains(tempParams[1], "language"))
+            {
+                if (insultData.Languages.Any(x => x.Contains(tempParams[2])))
+                {
+                    insultData.Languages.Add(tempParams[2]);
+                    ret =  (SendMethods.PrivateMessage("Language \"" + tempParams[2] + "\" added."));
+                }
+                else
+                {
+                    ret = (SendMethods.PrivateMessage("Language \"" + tempParams[2] + "\" already exists."));
+                }
+            }else if (InputParser.StringContains(tempParams[1], "adjective"))
+            {
+                if(insultData.Adjectives.Any(x => x.Contains(tempParams[2])))
+                {
+                    insultData.Adjectives.Add(tempParams[2]);
+                    ret = (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" added."));
+                }
+                else
+                {
+                    ret = (SendMethods.PrivateMessage("Adjective \"" + tempParams[2] + "\" already exists."));
+                }
+
+            } else if (InputParser.StringContains(tempParams[1], "insult"))
+            {
+                if (insultData.Adjectives.Any(x => x.Contains(tempParams[2])))
+                {
+                    insultData.Insults.Add(tempParams[2]);
+                    ret = (SendMethods.PrivateMessage("Insult \"" + tempParams[2] + "\" added."));
+                }
+                else
+                {
+                    ret = (SendMethods.PrivateMessage("Insult \"" + tempParams[2] + "\" already exists."));
+                }
+            }
+            else
+            {
+                ret = (SendMethods.PrivateMessage("Invalid parameter - See !NB help"));
+            }
+
+            return ret;
         }
         #endregion
 
         #region Challlenge Command
         public static ObservableCollection<string> ChallengeList;
         public static string Challenge(string user, string input)
-        {                       
+        {
             if (input.Contains("[") && input.Contains("]"))
             {
                 List<string> tempParams = InputParser.ParseParams(input);
@@ -148,12 +152,12 @@ namespace NeetBOT.NB_Classes
                 {
                     return (SendMethods.PrivateMessage("Invalid Challenge Parameter - See !NB Help"));
                 }
-                
+
             }
             else
             {
                 return (SendMethods.UserNotice("Your challenge - " + ChallengeList[rand.Next(0, ChallengeList.Count)] + " - Better get started.", user));
-            }                                
+            }
         }
         #endregion
 
@@ -253,7 +257,7 @@ namespace NeetBOT.NB_Classes
             else
             {
                 return (SendMethods.PrivateMessage("Invalid Parameter - See !NB Help"));
-            }         
+            }
         }
         #endregion
     }
