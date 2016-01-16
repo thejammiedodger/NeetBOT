@@ -25,6 +25,7 @@ namespace NeetBOT
         public static int PORT;
         public static string CHANNEL;
 
+        public static DateTime startTime = new DateTime();
         
 
         public MainWindow()
@@ -34,6 +35,8 @@ namespace NeetBOT
             txtChannel.Text = "DPT";
             txtPort.Text = "6667";
             txtServer.Text = "irc.rizon.net";
+
+            startTime = DateTime.UtcNow;
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
@@ -72,6 +75,12 @@ namespace NeetBOT
                     {
                         while ((inputLine = reader.ReadLine()) != null)
                         {
+                            if (inputLine.Contains("PING :") && !inputLine.Contains("!"))
+                            {
+                                await Task.Delay(5000);
+                                MainWindow.writer.WriteLine(inputLine.Replace("PING", "PONG"));
+                                Console.WriteLine(inputLine.Replace("PING", "PONG"));
+                            }
                             Console.WriteLine(inputLine);
                             InputParser.Parse(inputLine);
                             writer.Flush();                                                     

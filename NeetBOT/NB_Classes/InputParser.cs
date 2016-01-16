@@ -8,14 +8,14 @@ namespace NeetBOT.NB_Classes
 {
     public class InputParser
     {
-        
+
         public static void Parse(string input)
         {
             if (input.Contains(":!NB"))
             {
                 ParseCommands(input);
             }
-            else if(input.Contains("\u0001"))
+            else if (input.Contains("\u0001"))
             {
                 ParseCTCP(input);
             }
@@ -23,13 +23,11 @@ namespace NeetBOT.NB_Classes
 
         public static void ParseCommands(string input)
         {
-            if (input.Contains("PING"))
-            {
-                ircWriteLine(input.Replace("PING", "PONG"));
-            }
+
 
             string message = input.Substring(input.IndexOf("!NB"));
             string userRequested = input.Substring(input.IndexOf(":") + 1, input.IndexOf("!") - 1);
+
             if (StringContains(message, "maths") || StringContains(message, "math"))
             {
                 ircWriteLine(CommandMethods.Maths(message));
@@ -44,7 +42,7 @@ namespace NeetBOT.NB_Classes
             }
             else if (StringContains(message, "challenge"))
             {
-                 ircWriteLine(CommandMethods.Challenge(userRequested, input));
+                ircWriteLine(CommandMethods.Challenge(userRequested, input));
             }
             else if (StringContains(message, "imply"))
             {
@@ -54,6 +52,18 @@ namespace NeetBOT.NB_Classes
             {
                 ircWriteLine(SendMethods.UserPrivateMessage("https://github.com/sirdoombox/NeetBOT", userRequested));
             }
+            else if (StringContains(message, "uptime"))
+            {
+                ircWriteLine(CommandMethods.Uptime());
+            }
+            else if (StringContains(message, "rotencrypt"))
+            {
+                ircWriteLine(CommandMethods.RotEncrypt(message));
+            }
+            else if (StringContains(message, "rotdecrypt"))
+            {
+                ircWriteLine(CommandMethods.RotEncrypt(message));
+            }
             else
             {
                 ircWriteLine(SendMethods.PrivateMessage("Invalid Command - Use '~NB Help'"));
@@ -61,12 +71,24 @@ namespace NeetBOT.NB_Classes
         }
 
         public static void ParseCTCP(string input)
-        {           
+        {
             string userRequested = input.Substring(input.IndexOf(":") + 1, input.IndexOf("!") - 1);
             if (input.Contains("VERSION"))
             {
                 ircWriteLine(SendMethods.ctcpVersionResponse(userRequested));
             }
+        }
+
+        public static List<string> ParseParams (string message)
+        {
+            List<string> tempParams = new List<string>();
+            string args = message.Split('[', ']')[1];
+            string[] tempStrings = args.Split('|');
+            foreach(string param in tempStrings)
+            {
+                tempParams.Add(param);
+            }
+            return tempParams;
         }
 
         public static bool StringContains(string message, string word)
